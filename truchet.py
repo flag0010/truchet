@@ -52,26 +52,95 @@ class Truchet2:
     def return_coords(self):
         return self.p1, self.p2
 
+class Truchet3:    
+    #  modified truchet using 2 arcs
+    def __init__(self, xcenter, ycenter, style):
+        self.a, self.b, self.c, self.d = [xcenter-.5, ycenter+.5],[xcenter+.5, ycenter+.5],  [xcenter-.5, ycenter-.5], [xcenter+.5, ycenter-.5]
+        if style == 1:  #upper right and lower left arcs
+            #first upper right
+            x = [self.b[0] + cos(rad(i))/2. for i in range(180, 271)]
+            y = [self.b[1] + sin(rad(i))/2. for i in range(180, 271)]
+            x[44] = xcenter
+            y[44] = ycenter
+            self.p1 = [x,y]
+            #now lower left
+            x = [self.c[0] + cos(rad(i))/2. for i in range(0, 91)]
+            y = [self.c[1] + sin(rad(i))/2. for i in range(0, 91)]
+            x[44] = xcenter
+            y[44] = ycenter
+            self.p2 = [x,y]
+        if style == 2:  #upper left and lower right arcs
+            #first upper left
+            x = [self.a[0] + cos(rad(i))/2. for i in range(270, 361)]
+            y = [self.a[1] + sin(rad(i))/2. for i in range(270, 361)]
+            x[44] = xcenter
+            y[44] = ycenter
+            self.p1 = [x,y]
+            #now lower right
+            x = [self.d[0] + cos(rad(i))/2. for i in range(90, 181)]
+            y = [self.d[1] + sin(rad(i))/2. for i in range(90, 181)]
+            x[44] = xcenter
+            y[44] = ycenter
+            self.p2 = [x,y]
+    def return_coords(self):
+        return self.p1, self.p2
 
-        
 ax = plt.gca()
-
-c = cycle(['lowleft',  'upleft'])#,'lowright',  'upleft'])
 for i in range(20):
+    plt.axhline(i-.5)
+    plt.axvline(i-.5)
     for j in range(20):
         #random
         a = Truchet(i, j, choice(['lowleft', 'lowright', 'upleft', 'upright'])).return_tile()
-        #cycle 4
-        #a = Tile(i, j, c.next()).return_tile()
         ax.add_patch(a)
 
 ax.set_xlim(-2,21)
 ax.set_ylim(-2,21)        
 plt.show()
 
+
+ax = plt.gca()
+c = cycle(['lowleft',  'upleft', 'lowright',  'upright'])
 for i in range(20):
     for j in range(20):
-        p1, p2 = Truchet2(i,j, choice([1,2])).return_coords()
+        a = Truchet(i, j, c.next()).return_tile()
+        ax.add_patch(a)
+
+ax.set_xlim(-2,21)
+ax.set_ylim(-2,21)        
+plt.show()
+ax = plt.gca()
+
+for i in range(20):
+    plt.axhline(i-.5)
+    plt.axvline(i-.5)
+    for j in range(20):
+        p1, p2 = Truchet2(i,j,choice([1,2])).return_coords()
         plt.plot(p1[0], p1[1], color='k')
         plt.plot(p2[0], p2[1], color='k')
+plt.xlim(0,20)
+plt.ylim(0,20)
+plt.show()
+
+
+c = cycle([1,2,1,1,1,1,2,1])
+for i in range(20):
+    for j in range(20):
+        p1, p2 = Truchet2(i,j, c.next()).return_coords()
+        plt.plot(p1[0], p1[1], color='k')
+        plt.plot(p2[0], p2[1], color='k')
+plt.xlim(0,20)
+plt.ylim(0,20)
+plt.show()
+
+
+for i in range(20):
+    plt.axhline(i-.5)
+    plt.axvline(i-.5)
+    for j in range(20):
+        p1, p2 = Truchet3(i,j,choice([1,2])).return_coords()
+        plt.plot(p1[0], p1[1], color='k')
+        plt.plot(p2[0], p2[1], color='k')
+plt.xlim(0,20)
+plt.ylim(0,20)
 plt.show()
